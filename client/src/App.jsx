@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { Account, Orders, Profile, Settings, UserLayout } from './user'
 import { AdminLayout, AdminOrders, AdminProducts, AdminSettings, AdminUsers, Dashboard } from './admin'
 import Protected from './user/Protected'
+import ForgetPassword from './public/pages/ForgetPassword'
 
 const App = () => {
   return <div className='bg-light'>
@@ -14,6 +15,7 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
 
           {/* protected */}
           <Route path="/checkout" element={<Protected compo={<Checkout />} />} />

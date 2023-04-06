@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getUserOrders, login, placeOrder, updateProfile } from "./userActions";
+import { continueWithGoogle, getUserOrders, login, placeOrder, updateProfile } from "./userActions";
 
 const userSlice = createSlice({
     name: "user",
@@ -7,8 +7,10 @@ const userSlice = createSlice({
         info: JSON.parse(localStorage.getItem("userInfo"))
     },
     reducers: {
-        invalidate: (state, { payload }) => {
-            state.update = null
+        invalidateUser: (state, { payload }) => {
+            payload.forEach(item => {
+                state[item] = null
+            })
         },
         logout: (state) => {
             localStorage.removeItem("userInfo")
@@ -67,8 +69,20 @@ const userSlice = createSlice({
                 state.error = payload
             })
 
+            .addCase(continueWithGoogle.pending, (state, { payload }) => {
+                state.loading = true
+            })
+            .addCase(continueWithGoogle.fulfilled, (state, { payload }) => {
+                state.loading = false
+                state.info = payload
+            })
+            .addCase(continueWithGoogle.rejected, (state, { payload }) => {
+                state.loading = false
+                state.error = payload
+            })
+
     }
 
 })
-export const { invalidate, logout } = userSlice.actions
+export const { invalidateUser, logout } = userSlice.actions
 export default userSlice.reducer

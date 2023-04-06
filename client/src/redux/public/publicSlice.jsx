@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getCartItems, getProductDetail, getProducts, userRegister } from "./publicAction";
+import { forgetPassword, getCartItems, getProductDetail, getProducts, userRegister } from "./publicAction";
 
 const publicSlice = createSlice({
     name: "public",
@@ -7,6 +7,11 @@ const publicSlice = createSlice({
         cart: []
     },
     reducers: {
+        invalidatePublic: (state, { payload }) => {
+            payload.forEach(item => {
+                state[item] = null
+            })
+        },
         addToCart: (state, { payload }) => {
             state.cart.push(payload)
         },
@@ -71,10 +76,23 @@ const publicSlice = createSlice({
                 state.laoding = false
                 state.error = payload
             })
+
+
+            .addCase(forgetPassword.pending, (state, { payload }) => {
+                state.laoding = true
+            })
+            .addCase(forgetPassword.fulfilled, (state, { payload }) => {
+                state.laoding = false
+                state.emailSend = true
+            })
+            .addCase(forgetPassword.rejected, (state, { payload }) => {
+                state.laoding = false
+                state.error = payload
+            })
     }
 
 })
 
-export const { addToCart, emptyCart, deleteCartItem } = publicSlice.actions
+export const { addToCart, emptyCart, deleteCartItem, invalidatePublic } = publicSlice.actions
 
 export default publicSlice.reducer

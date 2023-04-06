@@ -3,25 +3,10 @@ import api from "../api";
 
 export const login = createAsyncThunk("user/login", async (userData, { rejectWithValue }) => {
     try {
-        const { data } = await api.get("/users", {
-            params: {
-                email: userData.email,
-                password: userData.password
-            }
-        })
-        console.log(data)
-        if (data.length !== 0) {
-            localStorage.setItem("userInfo", JSON.stringify(data[0]))
-            return data[0]
-
-
-        } else {
-            return rejectWithValue("email or password do not match")
-        }
-
+        const { data } = await api.post("/user/login", userData)
+        return data
     } catch (error) {
-        return rejectWithValue("something went wrong : " + error.message)
-
+        return rejectWithValue(error.response.data.message || error.message)
     }
 
 })
@@ -60,6 +45,16 @@ export const getUserOrders = createAsyncThunk("user/get-orders", async (orderDat
         return data
     } catch (error) {
         return rejectWithValue("something went wrong : " + error.message)
+
+    }
+})
+export const continueWithGoogle = createAsyncThunk("user/google", async (tokenId, { rejectWithValue, getState }) => {
+    try {
+        const { data } = await api.post(`/user/continue-with-google`, { tokenId })
+        return data.result
+    } catch (error) {
+
+        return rejectWithValue(error.response.data.message || error.message)
 
     }
 

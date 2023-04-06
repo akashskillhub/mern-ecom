@@ -40,10 +40,21 @@ export const getCartItems = createAsyncThunk("public/get-cart", async (cartItem,
 })
 export const userRegister = createAsyncThunk("public/register", async (user, { rejectWithValue, getState }) => {
     try {
-        const { data } = await api.post(`/users`, user)
+        const { data } = await api.post(`/user/register`, user)
         return data
     } catch (error) {
-        return rejectWithValue(error.message)
+        console.log(error)
+        return rejectWithValue(error.response.data.message || error.message)
+    }
+
+})
+export const forgetPassword = createAsyncThunk("public/forget-pass", async (user, { rejectWithValue, getState }) => {
+    try {
+        const { data } = await api.post(`/user/forget-password`, user)
+        return data
+    } catch (error) {
+        console.log(error)
+        return rejectWithValue(error.response.data.message || error.message)
     }
 
 })

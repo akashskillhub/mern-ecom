@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../redux/user/userActions'
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { invalidateUser } from '../../redux/user/userSlice'
 const Login = () => {
-    const { info } = useSelector(state => state.user)
+    const { info, error, loading } = useSelector(state => state.user)
     const navigate = useNavigate()
     useEffect(() => {
         if (info) {
-            navigate("/checkout")
+            // navigate("/checkout")
         }
     }, [info])
     const dispatch = useDispatch()
@@ -15,9 +16,23 @@ const Login = () => {
     const handleLogin = () => {
         dispatch(login({ email: "john@gmail.com", password: "123" }))
     }
+
+
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                dispatch(invalidateUser(["error"]))
+            }, 3000)
+        }
+    }, [error])
+
+    if (loading) {
+        return <div class="spinner-border text-primary"></div>
+    }
     return <div class="container">
         <div class="row">
             <div class="col-sm-6 offset-sm-3">
+                {error && <div className="alert alert-danger">{error}</div>}
                 <div class="card">
                     <div class="card-header">Login</div>
                     <div class="card-body">
@@ -48,6 +63,9 @@ const Login = () => {
                         </button>
                         <p class="text-center mt-3">
                             Dont Have Account? <a href="#">Create Account</a>
+                        </p>
+                        <p class="text-center mt-3">
+                            Forget password ? <Link to="/forget-password">Click Here</Link>
                         </p>
                     </div>
                 </div>
