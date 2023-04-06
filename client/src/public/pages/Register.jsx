@@ -3,9 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { userRegister } from '../../redux/public/publicAction'
 import { invalidatePublic } from '../../redux/public/publicSlice'
 import { useNavigate } from "react-router-dom"
-import { GoogleLogin } from "react-google-login"
-import { gapi } from "gapi-script"
-import { continueWithGoogle } from '../../redux/user/userActions'
+import ContinueWitGoogle from '../components/ContinueWitGoogle'
+
 const Rigster = () => {
     const { error, loading, register } = useSelector(state => state.public)
     const dispath = useDispatch()
@@ -32,18 +31,7 @@ const Rigster = () => {
         }
     }, [error, register])
 
-    useEffect(() => {
-        gapi.load("client:auth2", e => {
-            // gapi.auth2.init({
-            gapi.client.init({
-                clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-                scope: ""
-            })
-        })
-    }, [])
-    const handleSuccess = response => dispath(continueWithGoogle(response.tokenId))
 
-    const handleFail = err => console.log(err)
 
     return <>
         <div className="container">
@@ -51,13 +39,7 @@ const Rigster = () => {
                 <div className="col-sm-6 offset-sm-3">
                     {error && <div class="alert alert-danger">{error}</div>}
 
-                    <GoogleLogin
-                        className='w-100 mb-5 p-3 fs-5'
-                        clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
-                        buttonText='Continue With Google'
-                        onSuccess={handleSuccess}
-                        onFailure={handleFail}
-                    />
+                    <ContinueWitGoogle />
 
                     <div className="card">
                         <div className="card-header">Signup</div>

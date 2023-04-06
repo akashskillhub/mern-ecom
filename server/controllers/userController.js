@@ -122,8 +122,24 @@ exports.login = async (req, res) => {
         }
         const token = jwt.sign({ userId: found._id, role: found.role }, process.env.JWT_KEY)
         res.cookie("token", token)
+        const addr = {
+            house: found.address.house || "",
+            street: found.address.street || "",
+            city: found.address.city || "",
+            pin: found.address.pin || "",
+        }
         res.json({
-            message: "Login Success"
+            message: "Login Success",
+            result: {
+                name: found.name,
+                email: found.email,
+                role: found.role,
+                address: addr
+                // house:found.address.house || "",   
+                // street:found.address.street || "",   
+                // city:found.address.city || "",   
+                // pin:found.address.pin || "",   
+            }
         })
     } catch (error) {
         console.log("userController.js => destroyUsers")
@@ -154,12 +170,20 @@ exports.continueWithGoogle = async (req, res) => {
                 role: result.role
             }, process.env.JWT_KEY)
             res.cookie("token", token)
+
+            const addr = {
+                house: result.address.house || "",
+                street: result.address.street || "",
+                city: result.address.city || "",
+                pin: result.address.pin || "",
+            }
             res.json({
                 message: "Login Success",
                 result: {
                     name,
                     email,
-                    role: result.role
+                    role: result.role,
+                    address: addr
                 }
             })
 
@@ -238,6 +262,32 @@ exports.forgetPassword = async (req, res) => {
         res.json({
             message: "Instruction Send to Email Success"
         })
+
+    } catch (error) {
+        console.log("userController.js => continueWithGoogle")
+        console.log(error)
+        res.status(400).json({
+            message: "Error " + error
+        })
+    }
+}
+
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { uId } = req.params
+        const found = await User.findOne({ _id: uId })
+        if (!found) {
+            return res.status(400).json({
+                message: "Invalid User Id"
+            })
+        }
+        const hashPass = await bcrypt.hashSync(req.body.password, 10)
+        const result = await User.findByIdAndUpdate(uId, {
+            password: hashPass
+        })
+
+        res.json({ message: "Reset Success" })
 
     } catch (error) {
         console.log("userController.js => continueWithGoogle")

@@ -7,7 +7,8 @@ const {
     destroyUsers,
     login,
     continueWithGoogle,
-    forgetPassword } = require("../controllers/userController")
+    forgetPassword,
+    resetPassword } = require("../controllers/userController")
 
 const router = require("express").Router()
 
@@ -21,6 +22,7 @@ router
     .post("/login", login)
     .post("/continue-with-google", continueWithGoogle)
     .post("/forget-password", forgetPassword)
+    .post("/reset-password/:uId", resetPassword)
 
 
 module.exports = router

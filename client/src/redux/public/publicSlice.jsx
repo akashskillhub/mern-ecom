@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { forgetPassword, getCartItems, getProductDetail, getProducts, userRegister } from "./publicAction";
+import { forgetPassword, getCartItems, getProductDetail, getProducts, resetPassword, userRegister } from "./publicAction";
 
 const publicSlice = createSlice({
     name: "public",
@@ -86,6 +86,19 @@ const publicSlice = createSlice({
                 state.emailSend = true
             })
             .addCase(forgetPassword.rejected, (state, { payload }) => {
+                state.laoding = false
+                state.error = payload
+            })
+
+
+            .addCase(resetPassword.pending, (state, { payload }) => {
+                state.laoding = true
+            })
+            .addCase(resetPassword.fulfilled, (state, { payload }) => {
+                state.laoding = false
+                state.resetPass = true
+            })
+            .addCase(resetPassword.rejected, (state, { payload }) => {
                 state.laoding = false
                 state.error = payload
             })

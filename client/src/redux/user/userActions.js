@@ -4,7 +4,7 @@ import api from "../api";
 export const login = createAsyncThunk("user/login", async (userData, { rejectWithValue }) => {
     try {
         const { data } = await api.post("/user/login", userData)
-        return data
+        return data.result
     } catch (error) {
         return rejectWithValue(error.response.data.message || error.message)
     }

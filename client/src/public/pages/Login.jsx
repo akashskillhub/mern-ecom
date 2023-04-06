@@ -3,18 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../redux/user/userActions'
 import { Link, useNavigate } from "react-router-dom"
 import { invalidateUser } from '../../redux/user/userSlice'
+import ContinueWitGoogle from '../components/ContinueWitGoogle'
 const Login = () => {
     const { info, error, loading } = useSelector(state => state.user)
     const navigate = useNavigate()
     useEffect(() => {
         if (info) {
-            // navigate("/checkout")
+            navigate("/checkout")
         }
     }, [info])
     const dispatch = useDispatch()
 
     const handleLogin = () => {
-        dispatch(login({ email: "john@gmail.com", password: "123" }))
+        dispatch(login({ email: "akashdhone01@gmail.com", password: "456" }))
     }
 
 
@@ -33,9 +34,11 @@ const Login = () => {
         <div class="row">
             <div class="col-sm-6 offset-sm-3">
                 {error && <div className="alert alert-danger">{error}</div>}
+                <ContinueWitGoogle />
                 <div class="card">
                     <div class="card-header">Login</div>
                     <div class="card-body">
+
                         <div>
                             <label for="email" class="form-label">First Email</label>
                             <input
