@@ -13,7 +13,11 @@ exports.register = async (req, res) => {
             })
         }
         const hashPass = bcrypt.hashSync(password, 10)
-        const result = await User.create({ ...req.body, password: hashPass })
+        const result = await User.create({
+            ...req.body,
+            password: hashPass,
+            role: "user"
+        })
         res.json({
             message: "User Register Succes"
         })

@@ -80,8 +80,9 @@ const ProductList = ({ setSelectedProduct }) => {
 }
 const ProductCard = ({ product }) => {
     return <>
+        {product.images[0]}
         <div class="card p-4">
-            <img src={product.images} class="img-fluid" alt="" />
+            <img src={product.images[0]} class="img-fluid" alt="" />
             <div class="card-body">
                 <h6>{product.name}</h6>
                 <p>{product.desc}</p>
@@ -197,7 +198,8 @@ const ProductEdit = ({ selectedProduct, setSelectedProduct, show, setShow }) => 
 }
 
 const AddProduct = () => {
-
+    const [preview, setPreview] = useState([])
+    const [images, setImages] = useState([])
     const dispatch = useDispatch()
     const formik = useFormik({
         initialValues: {
@@ -215,9 +217,32 @@ const AddProduct = () => {
             images: yup.string().required(),
         }),
         onSubmit: values => {
-            dispatch(addProduct({ ...values, images: [values.images] }))
+            if (images.length > 0) {
+
+                const fd = new FormData()
+                fd.append("name", values.name)
+                fd.append("desc", values.desc)
+                fd.append("stock", values.stock)
+                fd.append("price", values.price)
+                for (let i = 0; i < images.length; i++) {
+                    fd.append("images", images[i])
+                }
+                dispatch(addProduct(fd))
+            } else {
+                console.log("Please Choose Image")
+            }
         }
     })
+
+    const handleChange = e => {
+        const images = e.target.files
+        setImages(images)
+        let allPreview = []
+        for (let i = 0; i < images.length; i++) {
+            allPreview.push(URL.createObjectURL(images[i]))
+        }
+        setPreview(allPreview)
+    }
 
     return <>
         <form onSubmit={formik.handleSubmit} >
@@ -291,16 +316,24 @@ const AddProduct = () => {
                             <div className='my-3'>
                                 <label for="name" class="form-label">Product Images</label>
                                 <input
-                                    {...formik.getFieldProps("images")}
-                                    type="text"
-                                    className={`
-                                    form-control  
-                                    ${formik.touched.images && (formik.errors.images ? "is-invalid" : "is-valid")
-                                        }
-                            `}
+                                    onChange={handleChange}
+                                    type="file"
+                                    multiple={true}
+                                    className="form-control"
                                     placeholder="Enter Product Stock" />
                                 <div class="valid-feedback">Looks good!</div>
                                 <div class="invalid-feedback">Please choose a username.</div>
+                            </div>
+
+                            <div>
+                                {
+                                    preview.map(url => <img
+                                        key={url}
+                                        className='img-fluid mx-3'
+                                        src={url}
+                                        alt={url}
+                                        width={100} />)
+                                }
                             </div>
 
                         </div>

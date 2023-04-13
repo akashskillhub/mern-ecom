@@ -15,7 +15,8 @@ const Login = () => {
     const dispatch = useDispatch()
 
     const handleLogin = () => {
-        dispatch(login({ email: "akashdhone01@gmail.com", password: "456" }))
+        // dispatch(login({ email: "akashdhone01@gmail.com", password: "456" }))
+        dispatch(login({ email: "admin@gmail.com", password: "123" }))
     }
 
 
