@@ -1,10 +1,12 @@
 const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
+const cookieParser = require("cookie-parser")
 const connectDB = require("./config/db")
 require("dotenv").config({ path: "./.env" })
 connectDB()
 const app = express()
+app.use(cookieParser())
 app.use(express.json())
 app.use(express.static("public"))
 app.use(cors({
@@ -14,6 +16,7 @@ app.use(cors({
 
 app.use("/api/user", require("./routes/userRoutes"))
 app.use("/api/products", require("./routes/productRoutes"))
+app.use("/api/orders", require("./routes/orderRoutes"))
 
 mongoose.connection.once("open", e => {
     console.log("MONGO CONNECTED")

@@ -8,7 +8,6 @@ exports.addProduct = async (req, res) => {
                 console.log(err)
                 return res.status(400).json({ message: "Multer Error" + err, })
             }
-            console.log(req.files)
             let imageURL = []
             for (let i = 0; i < req.files.length; i++) {
                 const src = `${process.env.HOST}/products/${req.files[i].filename}`
@@ -41,8 +40,13 @@ exports.readProducts = async (req, res) => {
 }
 exports.readProductDetail = async (req, res) => {
     try {
-        // const result = await Product.find()
-        res.json({ message: "Single Prodcut Read Sucess" })
+        const { productId } = req.params
+
+        const result = await Product.findById(productId)
+        if (!result) {
+            return res.status(400).json({ message: `Invalid Product Id` })
+        }
+        res.json({ message: "Single Prodcut Read Sucess", result })
     } catch (error) {
         console.log("productController => readProductDetail")
         console.log(error)

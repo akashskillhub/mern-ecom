@@ -4,12 +4,8 @@ import Users from "../../admin/pages/Users";
 
 export const getProducts = createAsyncThunk("public/get-products", async (value, { rejectWithValue, getState }) => {
     try {
-        const { data } = await api.get("/products", {
-            params: {
-                publish: true
-            }
-        })
-        return data
+        const { data } = await api.get("/products")
+        return data.result
     } catch (error) {
         return rejectWithValue(error.message)
     }
@@ -17,12 +13,8 @@ export const getProducts = createAsyncThunk("public/get-products", async (value,
 })
 export const getProductDetail = createAsyncThunk("public/get-product-detail", async (product, { rejectWithValue, getState }) => {
     try {
-        const { data } = await api.get(`/products/${product}`, {
-            params: {
-                publish: true
-            }
-        })
-        return data
+        const { data } = await api.get(`/products/${product}`)
+        return data.result
     } catch (error) {
         return rejectWithValue(error.message)
     }

@@ -169,8 +169,9 @@ exports.continueWithGoogle = async (req, res) => {
         if (result) {
 
             const token = jwt.sign({
-                name
-                , email,
+                userId: result._id,
+                name,
+                email,
                 role: result.role
             }, process.env.JWT_KEY)
             res.cookie("token", token)

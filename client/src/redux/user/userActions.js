@@ -22,15 +22,16 @@ export const updateProfile = createAsyncThunk("user/update-profile", async (user
 })
 export const placeOrder = createAsyncThunk("user/order-place", async (orderData, { rejectWithValue, getState }) => {
     try {
-        const { data } = await api.post(`/orders`, {
-            userId: getState().user.info.id,
+        console.log(orderData)
+        const { data } = await api.post(`/orders/place`, {
             products: orderData,
             paid: false,
             status: "placed"
         })
+        console.log(data)
         return true
     } catch (error) {
-        return rejectWithValue("something went wrong : " + error.message)
+        return rejectWithValue(error.response.data.message || error.message)
 
     }
 

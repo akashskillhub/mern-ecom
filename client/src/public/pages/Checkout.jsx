@@ -44,7 +44,13 @@ const LeftColumn = () => {
     }, [placed])
 
     const handleCheckout = () => {
-        dispatch(placeOrder(cart))
+        const cartItems = cart.map(item => {
+            return {
+                product: item._id,
+                qty: item.qty
+            }
+        })
+        dispatch(placeOrder(cartItems))
         // navigate("/payment-success")
     }
     return <>

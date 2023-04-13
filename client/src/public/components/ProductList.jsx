@@ -15,7 +15,7 @@ const ProductList = () => {
         <div class="col-sm-3 my-3">
             <Link
                 className='text-decoration-none text-dark'
-                to={`/product-detail/${item.id}`}>
+                to={`/product-detail/${item._id}`}>
                 <ProductCard
                     product={item}
                 />
@@ -35,7 +35,7 @@ const ProductList = () => {
 const ProductCard = ({ product }) => {
     return <>
         <div class="card">
-            <img src={product.images} class="img-fluid py-3 px-4" alt="" />
+            <img src={product.images[0]} class="img-fluid py-3 px-4" alt="" />
             <div class="card-body">
                 <h6>{product.name}</h6>
                 <p>{product.desc}</p>
