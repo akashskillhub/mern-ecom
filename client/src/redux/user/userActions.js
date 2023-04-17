@@ -4,6 +4,7 @@ import api from "../api";
 export const login = createAsyncThunk("user/login", async (userData, { rejectWithValue }) => {
     try {
         const { data } = await api.post("/user/login", userData)
+        localStorage.setItem("info", JSON.stringify(data.result))
         return data.result
     } catch (error) {
         return rejectWithValue(error.response.data.message || error.message)
@@ -52,6 +53,7 @@ export const getUserOrders = createAsyncThunk("user/get-orders", async (orderDat
 export const continueWithGoogle = createAsyncThunk("user/google", async (tokenId, { rejectWithValue, getState }) => {
     try {
         const { data } = await api.post(`/user/continue-with-google`, { tokenId })
+        localStorage.setItem("info", JSON.stringify(data.result))
         return data.result
     } catch (error) {
 
@@ -60,3 +62,26 @@ export const continueWithGoogle = createAsyncThunk("user/google", async (tokenId
     }
 
 })
+export const initiatePaymentAction = createAsyncThunk("user/initiate-payment", async (amount, { rejectWithValue, getState }) => {
+    try {
+        const { data } = await api.post(`/orders/initiate-payment`, { amount })
+        return data.result
+    } catch (error) {
+
+        return rejectWithValue(error.response.data.message || error.message)
+
+    }
+
+})
+export const verifyPaymentAction = createAsyncThunk("user/verify-payment", async (response, { rejectWithValue, getState }) => {
+    try {
+        const { data } = await api.post(`/orders/verify-payment`, response)
+
+        return data.result
+    } catch (error) {
+        return rejectWithValue(error.response.data.message || error.message)
+
+    }
+
+})
+

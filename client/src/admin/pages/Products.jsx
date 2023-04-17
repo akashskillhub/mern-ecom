@@ -7,6 +7,11 @@ import { Link } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
 import { addProduct, readProducts, updateProduct } from '../../redux/admin/adminActions'
 import { invalidate } from '../../redux/admin/adminSlice'
+
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
+import ReactHtmlParser from "react-html-parser"
+
 const Products = () => {
     const [show, setShow] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState()
@@ -85,7 +90,7 @@ const ProductCard = ({ product }) => {
             <img src={product.images[0]} class="img-fluid" alt="" />
             <div class="card-body">
                 <h6>{product.name}</h6>
-                <p>{product.desc}</p>
+                <div>{ReactHtmlParser(product.desc.substring(1, 100))}</div>
                 <p>
                     Starting From
                     <strong>${product.price}/-</strong>
@@ -108,7 +113,7 @@ const ProductDetails = ({ selectedProduct, setShow }) => {
             {
                 <>
                     <h1>{selectedProduct.name}</h1>
-                    <p>{selectedProduct.desc}</p>
+                    <div>{ReactHtmlParser(selectedProduct.desc)}</div>
                     <p>{selectedProduct.price}</p>
 
                 </>
@@ -200,18 +205,17 @@ const ProductEdit = ({ selectedProduct, setSelectedProduct, show, setShow }) => 
 const AddProduct = () => {
     const [preview, setPreview] = useState([])
     const [images, setImages] = useState([])
+    const [desc, setDesc] = useState("")
     const dispatch = useDispatch()
     const formik = useFormik({
         initialValues: {
             name: "ASUS Core i9 12th Gen",
-            desc: "32 GB/1 TB SSD/Windows 11 Home/6 GB Graphics/NVIDIA GeForce RTX 6GB RTX 3060) N7601ZM-MQ931WS Gaming Laptop  (16 inch, Black, With MS Office",
-            stock: 5,
+
             price: 192440,
             images: "https://rukminim1.flixcart.com/image/416/416/xif0q/computer/i/3/2/vivobook-pro-16x-gaming-laptop-asus-original-imagnwe9h5zyfaje.jpeg?q=70"
         },
         validationSchema: yup.object({
             name: yup.string().required(),
-            desc: yup.string().required(),
             stock: yup.string().required(),
             price: yup.string().required(),
             images: yup.string().required(),
@@ -221,7 +225,7 @@ const AddProduct = () => {
 
                 const fd = new FormData()
                 fd.append("name", values.name)
-                fd.append("desc", values.desc)
+                fd.append("desc", desc)
                 fd.append("stock", values.stock)
                 fd.append("price", values.price)
                 for (let i = 0; i < images.length; i++) {
@@ -271,19 +275,16 @@ const AddProduct = () => {
                                 <div class="valid-feedback">Looks good!</div>
                                 <div class="invalid-feedback">Please choose a username.</div>
                             </div>
+
+                            <pre>
+                                {JSON.stringify(desc, null, 2)}
+                            </pre>
                             <div className='my-3'>
-                                <label for="name" class="form-label">Product Description</label>
-                                <input
-                                    {...formik.getFieldProps("desc")}
-                                    type="text"
-                                    className={`
-                                    form-control  
-                                    ${formik.touched.desc && (formik.errors.desc ? "is-invalid" : "is-valid")
-                                        }
-                            `}
-                                    placeholder="Enter Product Description" />
-                                <div class="valid-feedback">Looks good!</div>
-                                <div class="invalid-feedback">Please choose a username.</div>
+                                <ReactQuill
+                                    theme='snow'
+                                    value={desc}
+                                    onChange={setDesc}
+                                />
                             </div>
                             <div className='my-3'>
                                 <label for="name" class="form-label">Product Price</label>

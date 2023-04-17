@@ -2,9 +2,10 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import BillCard from '../components/BillCard'
 import { useSelector, useDispatch } from 'react-redux'
-import { placeOrder } from '../../redux/user/userActions'
+import { initiatePaymentAction, placeOrder } from '../../redux/user/userActions'
 import { useEffect } from 'react'
 import { emptyCart } from '../../redux/public/publicSlice'
+import Razorpay from '../components/Razorpay'
 const Checkout = () => {
     const { cart } = useSelector(state => state.public)
     const navigate = useNavigate()
@@ -44,17 +45,19 @@ const LeftColumn = () => {
     }, [placed])
 
     const handleCheckout = () => {
-        const cartItems = cart.map(item => {
-            return {
-                product: item._id,
-                qty: item.qty
-            }
-        })
-        dispatch(placeOrder(cartItems))
+        // const cartItems = cart.map(item => {
+        //     return {
+        //         product: item._id,
+        //         qty: item.qty
+        //     }
+        // })
+        // dispatch(placeOrder(cartItems))
+        dispatch(initiatePaymentAction(150))
         // navigate("/payment-success")
     }
     return <>
         <div>
+            <Razorpay desc="awosome product" />
             <div class="card">
                 <div class="card-header">Choose Address</div>
                 <div class="card-body">

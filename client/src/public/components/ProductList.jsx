@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { getProducts } from '../../redux/public/publicAction'
-
+import ReactHtmlParser from "react-html-parser"
 const ProductList = () => {
     const dispatch = useDispatch()
     const { products } = useSelector(state => state.public)
@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
             <img src={product.images[0]} class="img-fluid py-3 px-4" alt="" />
             <div class="card-body">
                 <h6>{product.name}</h6>
-                <p>{product.desc}</p>
+                <div>{ReactHtmlParser(product.desc.substring(1, 100))}</div>
                 <p>
                     Starting From
                     <strong>${product.price}/-</strong>

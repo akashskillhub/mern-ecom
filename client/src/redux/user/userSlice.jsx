@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { continueWithGoogle, getUserOrders, login, placeOrder, updateProfile } from "./userActions";
+import { continueWithGoogle, getUserOrders, initiatePaymentAction, login, placeOrder, updateProfile, verifyPaymentAction } from "./userActions";
 
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        info: JSON.parse(localStorage.getItem("userInfo"))
+        info: JSON.parse(localStorage.getItem("info"))
     },
     reducers: {
         invalidateUser: (state, { payload }) => {
@@ -79,6 +79,33 @@ const userSlice = createSlice({
             .addCase(continueWithGoogle.rejected, (state, { payload }) => {
                 state.loading = false
                 state.error = payload
+            })
+
+
+            .addCase(initiatePaymentAction.pending, (state, { payload }) => {
+                state.loading = true
+            })
+            .addCase(initiatePaymentAction.fulfilled, (state, { payload }) => {
+                state.loading = false
+                state.orderId = payload
+            })
+            .addCase(initiatePaymentAction.rejected, (state, { payload }) => {
+                state.loading = false
+                state.error = payload
+            })
+
+            .addCase(verifyPaymentAction.pending, (state, { payload }) => {
+                state.loading = true
+            })
+            .addCase(verifyPaymentAction.fulfilled, (state, { payload }) => {
+                state.loading = false
+                state.paymentVerify = true
+                state.orderId = null
+            })
+            .addCase(verifyPaymentAction.rejected, (state, { payload }) => {
+                state.loading = false
+                state.error = payload
+                state.orderId = null
             })
 
     }

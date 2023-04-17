@@ -4,7 +4,7 @@ import { forgetPassword, getCartItems, getProductDetail, getProducts, resetPassw
 const publicSlice = createSlice({
     name: "public",
     initialState: {
-        cart: []
+        cart: JSON.parse(localStorage.getItem("cart")) || []
     },
     reducers: {
         invalidatePublic: (state, { payload }) => {
@@ -14,6 +14,10 @@ const publicSlice = createSlice({
         },
         addToCart: (state, { payload }) => {
             state.cart.push(payload)
+            state.total = state.cart.reduce((total, item) => total + (item.qty * item.price), 0)
+
+            localStorage.setItem("cart", JSON.stringify(state.cart))
+
         },
         deleteCartItem: (state, { payload }) => {
             state.cart.splice(payload, 1)

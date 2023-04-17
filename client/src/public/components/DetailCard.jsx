@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { getProductDetail } from "../../redux/public/publicAction"
 import { addToCart } from "../../redux/public/publicSlice"
-
+import ReactHtmlParser from "react-html-parser"
 const DetailCard = () => {
     const { productId } = useParams()
     const { singleProduct, loading, error } = useSelector(state => state.public)
@@ -57,7 +57,7 @@ const LeftColumn = ({ singleProduct }) => {
                     {
                         singleProduct.available
                             ? <>
-                                <div class="d-flex justify-content-center gap-4 mb-4">
+                                <div class="d-flex justify-content-center gap-4 mb-4 mt-3">
                                     <button
                                         type="button"
                                         onClick={e => setQty(qty === 1 ? 1 : qty - 1)}
@@ -87,7 +87,7 @@ const RightColum = ({ singleProduct }) => {
     return <>
         <h1>{singleProduct.name}</h1>
         <p>price <strong> {singleProduct.price}/-</strong></p>
-        <p>{singleProduct.desc}</p>
+        <div>{ReactHtmlParser(singleProduct.desc)}</div>
     </>
 }
 export default DetailCard
